@@ -2,8 +2,6 @@
 import requests
 import time
 from typing import Dict
-import aiohttp
-import asyncio
 from typing import List, Dict
 
 class RAGAttackClient:
@@ -71,4 +69,5 @@ class RAGAttackClient:
 # res=test.query(protmpt+inp)
 # torch.cuda.empty_cache()
 # print(res)
+
 #[print(item['output']) for item in res]
