@@ -5,7 +5,7 @@ from typing import List, Union
 class VectorEmbedder:
     """本地向量化模型调用模块"""
     
-    def __init__(self, model_name: str = 'sentence-transformers/all-MiniLM-L6-v2'):
+    def __init__(self, model_name: str = 'shibing624/text2vec-base-chinese'):
         self.model = SentenceTransformer(model_name)
         
     def encode(self, texts: Union[str, List[str]]) -> np.ndarray:
@@ -20,27 +20,7 @@ class VectorEmbedder:
             return 0.0
         return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
     
-    def batch_similarity(self, query_vec: np.ndarray, doc_vecs: np.ndarray) -> List[float]:
-        """批量计算相似度"""
-        similarities = []
-        for doc_vec in doc_vecs:
-            similarity = self.cosine_similarity(query_vec, doc_vec)
-            similarities.append(similarity)
-        return similarities
-    
-    def compute_semantic_diversity(self, text: str, reference_texts: List[str]) -> float:
-        """计算文本与参考文本集的语义多样性"""
-        if not reference_texts:
-            return 1.0
-            
-        text_vec = self.encode(text)[0]
-        ref_vecs = self.encode(reference_texts)
-        
-        similarities = self.batch_similarity(text_vec, ref_vecs)
-        max_similarity = max(similarities) if similarities else 0.0
-        
-        return 1.0 - max_similarity
 
-test=VectorEmbedder()
-texts=["你好啊，我是qwen3","你好啊，我是王世恒"]
-print(test.compute_semantic_diversity(texts[0],texts[1]))
+# test=VectorEmbedder()
+# texts=["暮色漫过山脊时，我看见了那个稻草人。它还在老屋院角站着，褪色的衣裳被风灌满，像一具被岁月遗忘的旧木偶。车轮碾过石板路的凹痕，碾碎了二十年前的蝉鸣。母亲掀开灶台的柴门，炊烟裹着腊肉香扑面而来，恍惚间我竟分不清是记忆在燃烧，还是现实的烟火。  ","堂屋的八仙桌上，搪瓷碗底凝着半盏茶垢。父亲的烟斗不知何时换了新式样的，却依旧蜷在竹椅扶手上。檐角铜铃被岁月磨得发亮，风起时竟发出孩童嬉笑的回响。我忽然想起，那年离家时也是这般暮色，母亲将晒干的艾草塞进我行囊，说能驱散异乡的寒气。"]
+# print(test.cosine_similarity(test.encode(texts[0])[0],test.encode(texts[1])[0]))
