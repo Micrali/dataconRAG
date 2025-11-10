@@ -201,11 +201,9 @@ class RAGAttackLoop:
             for st in rt:
                 self.cache_manager.add_to_sentence_cache(st)
         os.makedirs(os.path.dirname('output.json') if os.path.dirname('output.json') else '.', exist_ok=True)
-        print(self.cache_manager.long_term_sentence_cache)
         ot=[]
         for tp in self.cache_manager.long_term_sentence_cache:
             ot.append(tp[0])
-        print(ot)
         try:
             
             with open('output.json', 'w', encoding='utf-8') as f:
@@ -317,7 +315,5 @@ if __name__ == "__main__":
         last_iteration = output_data['output'][-1]
         print(f"\n最后一次迭代摘要 (迭代 {last_iteration['iteration']}):")
         print(f"  处理文本数: {len(last_iteration.get('input_texts', []))}")
-        # print(f"  生成锚点: {len(last_iteration['anchors_generated'])} 个")
-        # print(f"  锚点结果: {len(last_iteration['anchor_results'])} 条")
         print(f"  语句结果: {len(last_iteration['sentence_results'])} 条")
 
