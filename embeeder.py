@@ -2,6 +2,24 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Union
 
+
+class EnglishVectorEmbedder:
+    """英文专用向量化模型（基于sentence-transformers）"""
+    def __init__(self):
+        # 选择英文优化模型：all-MiniLM-L6-v2（轻量高效，适合英文语义匹配）
+        # 其他可选模型：all-mpnet-base-v2（精度更高）、paraphrase-MiniLM-L6-v2（专注短语匹配）
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+    
+    def encode(self, texts: Union[str, List[str]]) -> np.ndarray:
+        """将英文文本编码为向量"""
+        if isinstance(texts, str):
+            texts = [texts]
+        return self.model.encode(texts)  # 返回形状为 (1, 384) 的向量
+    
+    def cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
+        """计算两个向量的余弦相似度"""
+        return self.model.similarity(vec1, vec2).item()  # 直接使用模型内置的相似度计算
+
 class VectorEmbedder:
     """本地向量化模型调用模块"""
     
@@ -20,7 +38,3 @@ class VectorEmbedder:
             return 0.0
         return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
     
-
-# test=VectorEmbedder()
-# texts=["暮色漫过山脊时，我看见了那个稻草人。它还在老屋院角站着，褪色的衣裳被风灌满，像一具被岁月遗忘的旧木偶。车轮碾过石板路的凹痕，碾碎了二十年前的蝉鸣。母亲掀开灶台的柴门，炊烟裹着腊肉香扑面而来，恍惚间我竟分不清是记忆在燃烧，还是现实的烟火。  ","堂屋的八仙桌上，搪瓷碗底凝着半盏茶垢。父亲的烟斗不知何时换了新式样的，却依旧蜷在竹椅扶手上。檐角铜铃被岁月磨得发亮，风起时竟发出孩童嬉笑的回响。我忽然想起，那年离家时也是这般暮色，母亲将晒干的艾草塞进我行囊，说能驱散异乡的寒气。"]
-# print(test.cosine_similarity(test.encode(texts[0])[0],test.encode(texts[1])[0]))
