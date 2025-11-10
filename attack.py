@@ -155,14 +155,12 @@ class RAGAttackLoop:
                 if i < len(current_texts) - 1:  # 不是最后一个
                     time.sleep(self.delay)
             
-            # print(f"锚点查询结果: {len(iteration_anchor_results)} 条")
             print(f"语句查询结果: {len(iteration_sentence_results)} 条")
             
             # 合并所有查询类型
             merged_queries = {
                 'forward': [],
                 'backward': [],
-                'overlap': []
             }
             for query_dict in iteration_queries:
                 for key in merged_queries.keys():
@@ -173,9 +171,7 @@ class RAGAttackLoop:
             iteration_result = {
                 'iteration': iteration + 1,
                 'input_texts': current_texts,
-                # 'anchors_generated': iteration_anchors,
                 'queries_generated': merged_queries,
-                # 'anchor_results': iteration_anchor_results,
                 'sentence_results': iteration_sentence_results,
                 'cache_stats': self.cache_manager.get_cache_stats()
             }
@@ -291,7 +287,7 @@ if __name__ == "__main__":
     # 初始化攻击循环
     attacker = RAGAttackLoop(
         qwen_model=qwen_model,
-        max_iterations=4,
+        max_iterations=1,
         delay_between_queries=0.1,
         output_file="attack_output.json"
     )
